@@ -1,0 +1,24 @@
+{
+  "name": "interactive-fitness",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "http-server -o --cors -a localhost -p 8080",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sdmels/interactive-fitness.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sdmels/interactive-fitness/issues"
+  },
+  "homepage": "https://github.com/sdmels/interactive-fitness#readme",
+  "devDependencies": {
+    "http-server": "^0.12.3"
+  }
+}
