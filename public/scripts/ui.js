@@ -265,7 +265,7 @@ const fetchStat = async () => {
       document.getElementById(
         'heart-rate-dynamic-1-cal'
       ).innerText = randomHeartRate(120, 125);
-    }, 1000);
+    }, 2000);
   }
 };
 
@@ -278,7 +278,19 @@ const addVideoNode = (participant, stream) => {
 
     videoNode.setAttribute('id', 'video-' + participant.id);
     videoNode.setAttribute('class', 'bs-card-video');
+    console.log(document.getElementById('video-1').width);
+    console.log(document.getElementById('video-1').height);
+
     // videoNode.setAttribute('width', 320);
+    // debugger;
+    // videoNode.setAttribute(
+    //   'width',
+    //   document.getElementById('video-1').videoWidth
+    // );
+    // videoNode.setAttribute(
+    //   'height',
+    //   document.getElementById('video-1').videoHeight
+    // );
     videoNode.setAttribute('playsinline', true);
     videoNode.muted = true;
     videoNode.setAttribute('autoplay', 'autoplay');
