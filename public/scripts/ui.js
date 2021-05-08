@@ -227,18 +227,46 @@ const initUI = () => {
 };
 
 const fetchStat = async () => {
-  const result = await axios.get(
-    'https://api.fitbit.com/1/user/-/activities/heart/date/today/1d.json',
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+  try {
+    const heartRateResult = await axios.get(
+      'https://api.fitbit.com/1/user/-/activities/heart/date/today/1d/1min.json',
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
-  const { data } = result;
+    const activitiesResult = await axios.get(
+      'https://api.fitbit.com/1/user/-/activities/date/today.json',
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
-  console.log('fetched data', data);
+    const { dataset } = heartRateResult.data['activities-heart-intraday'];
+    const { summary: activitySummary } = activitiesResult;
+
+    const data = dataset[dataset.length - 1];
+
+    document.getElementById('heart-rate-dynamic-1-bpm').innerText =
+      data?.value || '';
+
+    document.getElementById('heart-rate-dynamic-1-cal').innerText =
+      activitySummary.caloriesOut;
+  } catch (error) {
+    console.log('fetched error', error);
+    heartRateDynamic1Interval = setInterval(() => {
+      document.getElementById(
+        'heart-rate-dynamic-1-bpm'
+      ).innerText = randomHeartRate(113, 115);
+      document.getElementById(
+        'heart-rate-dynamic-1-cal'
+      ).innerText = randomHeartRate(120, 125);
+    }, 1000);
+  }
 };
 
 // Add a video stream to the web page
@@ -260,16 +288,9 @@ const addVideoNode = (participant, stream) => {
     videoContainer.appendChild(videoNode);
 
     document.getElementById('video-dynamic-1').style.display = '';
-    heartRateDynamic1Interval = setInterval(() => {
-      document.getElementById(
-        'heart-rate-dynamic-1-bpm'
-      ).innerText = randomHeartRate(113, 115);
-      document.getElementById(
-        'heart-rate-dynamic-1-cal'
-      ).innerText = randomHeartRate(120, 125);
-    }, 1000);
 
-    // interval = setInterval(fetchStat, 1000);
+    fetchStat();
+    interval = setInterval(fetchStat, 10000);
   }
 
   navigator.attachMediaStream(videoNode, stream);
@@ -281,7 +302,7 @@ const removeVideoNode = (participant) => {
 
   if (videoNode) {
     videoNode.parentNode.removeChild(videoNode);
-    // clearInterval(interval);
+    clearInterval(interval);
     clearInterval(heartRateDynamic1Interval);
   }
 };
